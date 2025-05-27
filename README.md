@@ -36,8 +36,8 @@ A aplicação oferece **filtros** e **busca** para encontrar rapidamente o que v
 ### 1. Clone este repositório:
 
 ```bash
-git clone https://github.com/seu-usuario/seu-repositorio.git
-cd seu-repositorio
+git clone https://github.com/JheniferFM/teste-programador-lista-tarefas.git
+
 ```
 
 ---
