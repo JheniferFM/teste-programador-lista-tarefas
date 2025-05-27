@@ -5,6 +5,13 @@
 @section('content')
 <div class="container" style="max-width: 600px; margin: 2rem auto;">
 
+    {{-- Aqui exibe a mensagem de sucesso, se existir --}}
+    @if (session('success'))
+        <div style="background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 10px; border-radius: 5px; margin-bottom: 1rem;">
+            {{ session('success') }}
+        </div>
+    @endif
+
     <h1 style="color:#1F3A73; margin-bottom: 1rem;">Criar Nova Tarefa</h1>
 
     <form action="{{ route('tasks.store') }}" method="POST" style="background: #F4F6F9; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.12);">

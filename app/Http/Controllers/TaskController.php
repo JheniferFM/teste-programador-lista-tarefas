@@ -11,27 +11,35 @@ class TaskController extends Controller
 {
     public function __construct()
     {
-        // Garante que o usuário esteja autenticado para qualquer método
+        // Garante que só usuários autenticados possam acessar qualquer método deste controller
         $this->middleware('auth');
     }
 
-    // Listar tarefas com filtro por título e status, só do usuário logado
+    /**
+     * Lista as tarefas do usuário logado, com filtros opcionais por título e status.
+     */
     public function index(Request $request)
     {
+        // Começa filtrando só as tarefas do usuário autenticado
         $query = Task::where('user_id', auth()->id());
 
+        // Define quais status são válidos
         $statusValidos = ['pendente', 'andamento', 'concluida'];
 
+        // Se o filtro de status estiver preenchido e for válido, aplica na consulta
         if ($request->has('status') && in_array($request->status, $statusValidos)) {
             $query->where('status', $request->status);
         }
 
+        // Se o filtro de título estiver preenchido, aplica na consulta
         if ($request->filled('titulo')) {
             $query->where('titulo', 'like', '%' . $request->titulo . '%');
         }
 
+        // Ordena as tarefas pela mais recente primeiro e pagina
         $tasks = $query->orderBy('created_at', 'desc')->paginate(10);
 
+        // Retorna para a view passando as tarefas e filtros
         return view('tasks.index', [
             'tasks' => $tasks,
             'statusFiltro' => $request->status ?? '',
@@ -39,15 +47,20 @@ class TaskController extends Controller
         ]);
     }
 
-    // Exibir formulário para criar tarefa
+    /**
+     * Exibe o formulário para criar uma nova tarefa.
+     */
     public function create()
     {
         return view('tasks.create');
     }
 
-    // Salvar nova tarefa com validação via StoreTaskRequest
+    /**
+     * Armazena uma nova tarefa no banco, validando com StoreTaskRequest.
+     */
     public function store(StoreTaskRequest $request)
     {
+        // Cria a tarefa associando ao usuário logado
         Task::create([
             'titulo' => $request->titulo,
             'descricao' => $request->descricao,
@@ -55,34 +68,47 @@ class TaskController extends Controller
             'user_id' => auth()->id(),
         ]);
 
+        // Redireciona com mensagem de sucesso para a listagem
         return redirect()->route('tasks.index')->with('success', 'Tarefa criada com sucesso!');
     }
 
-    // Exibir formulário para editar tarefa com autorização
+    /**
+     * Exibe o formulário para editar uma tarefa, garantindo que o usuário tenha permissão.
+     */
     public function edit(Task $task)
     {
+        // Garante que só o dono da tarefa pode editar
         $this->authorize('update', $task);
 
         return view('tasks.edit', compact('task'));
     }
 
-    // Atualizar tarefa com validação via UpdateTaskRequest e autorização
+    /**
+     * Atualiza uma tarefa, com validação e autorização.
+     */
     public function update(UpdateTaskRequest $request, Task $task)
     {
+        // Garante que só o dono da tarefa pode atualizar
         $this->authorize('update', $task);
 
+        // Atualiza apenas os campos permitidos
         $task->update($request->only('titulo', 'descricao', 'status'));
 
+        // Redireciona com mensagem de sucesso
         return redirect()->route('tasks.index')->with('success', 'Tarefa atualizada com sucesso!');
     }
 
-    // Excluir tarefa com autorização
+    /**
+     * Exclui uma tarefa do banco, com autorização.
+     */
     public function destroy(Task $task)
     {
+        // Garante que só o dono da tarefa pode excluir
         $this->authorize('delete', $task);
 
         $task->delete();
 
+        // Redireciona com mensagem de sucesso
         return redirect()->route('tasks.index')->with('success', 'Tarefa excluída com sucesso!');
     }
 }

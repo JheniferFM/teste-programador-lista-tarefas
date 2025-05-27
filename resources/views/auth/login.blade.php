@@ -1,4 +1,3 @@
-<!-- resources/views/auth/login.blade.php -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -35,7 +34,8 @@
       font-weight: 600;
       font-size: 0.9rem;
     }
-    input {
+    input[type="email"],
+    input[type="password"] {
       width: 100%;
       padding: 0.5rem 0.75rem;
       margin-bottom: 1rem;
@@ -44,7 +44,8 @@
       font-size: 1rem;
       transition: border-color 0.3s ease;
     }
-    input:focus {
+    input[type="email"]:focus,
+    input[type="password"]:focus {
       border-color: #4A90E2;
       outline: none;
     }
@@ -54,6 +55,7 @@
       margin-bottom: 1rem;
       font-size: 0.9rem;
       color: #2C3E50;
+      cursor: pointer;
     }
     .checkbox-group input[type="checkbox"] {
       margin-right: 0.5rem;
@@ -108,10 +110,10 @@
       <input id="password" type="password" name="password" required autocomplete="current-password" />
       @error('password') <div class="error">{{ $message }}</div> @enderror
 
-      <div class="checkbox-group">
-        <input id="remember" type="checkbox" name="remember" />
-        <label for="remember">Lembrar-me</label>
-      </div>
+      <label class="checkbox-group" for="remember">
+        <input id="remember" type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }} />
+        Lembrar-me
+      </label>
 
       <button type="submit">Entrar</button>
     </form>

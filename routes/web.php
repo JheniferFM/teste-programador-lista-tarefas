@@ -4,8 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\TaskController as AdminTaskController;
 
 // Redirecionamento
 Route::redirect('/', '/tasks')->name('home');
@@ -27,11 +25,3 @@ Route::resource('tasks', TaskController::class)
     ->except(['show'])
     ->middleware('auth');
 
-// Rotas do admin protegidas por middleware 'auth' e 'admin'
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-   Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
-
-
-    // Listar todas as tarefas para o admin
-    Route::get('tasks', [AdminTaskController::class, 'index'])->name('tasks.index');
-});
