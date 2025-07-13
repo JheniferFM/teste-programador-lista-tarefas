@@ -4,7 +4,7 @@
 Seja bem-vindo(a) ao **To-Do List Laravel**, uma aplicação simples e eficiente para você organizar suas tarefas diárias, com sistema completo de autenticação, gerenciamento e controle do status das suas atividades.
 
 ---
-
+![Tela](public/IMG.png)
 ## 🚀 Sobre o Projeto
 
 Este sistema foi desenvolvido para facilitar o gerenciamento de tarefas, onde cada usuário pode:
